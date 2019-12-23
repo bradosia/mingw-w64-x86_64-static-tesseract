@@ -19,4 +19,5 @@ Library:
 * Tesseract 4.1.0-1
 * leptonica 1.78.0
 * harfbuzz 2.6.4
+* and many others the libraries above depend on.
 

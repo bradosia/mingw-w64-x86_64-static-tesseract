@@ -1,4 +1,4 @@
-# tesseract static test for MinGW64
+# Tesseract static libraries for MinGW64
 Static compilation test for tesseract in windows with MinGW64 compiler. All static libraries are prebuilt for linking. 
 
 Credit to:

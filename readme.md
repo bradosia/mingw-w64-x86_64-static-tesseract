@@ -23,7 +23,7 @@ Library:
 
 ## Building Harfbuzz
 1. Download the PKGBUILD: https://github.com/msys2/MINGW-packages/tree/master/mingw-w64-harfbuzz
-2. 
+2. In MSYS2:
 ```shell
 makepkg-mingw -sCLf
 ```

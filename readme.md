@@ -1,5 +1,10 @@
 # Tesseract static libraries for MinGW64
-Includes a static library linked test program for tesseract in windows with MinGW64 compiler. All static libraries are prebuilt for linking. 
+Includes a static library linked test program for tesseract in windows with MinGW64 compiler. All static libraries are prebuilt for linking.
+
+Features demonstrated:
+* OCR of image
+* Output as hocr file
+* monitor OCR progress
 
 Credit to:
 * MSYS2 (https://msys2.duckdns.org/package/mingw-w64-x86_64-tesseract-ocr?repo=mingw64)

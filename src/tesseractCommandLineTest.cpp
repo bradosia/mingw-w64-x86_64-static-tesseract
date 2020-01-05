@@ -2,16 +2,36 @@
  * Should build without any external dependencies
  */
 // c++ headers
+#include <fstream>
 #include <string>
+#include <thread>
 
 // tesseract 4.1.0 and leptonica 1.78.0
 #include <tesseract/baseapi.h>
+#include <tesseract/ocrclass.h>
 #include <leptonica/allheaders.h>
+
+void monitorProgress(ETEXT_DESC *monitor, int page);
+void ocrProcess(tesseract::TessBaseAPI *api, ETEXT_DESC *monitor);
+
+void monitorProgress(ETEXT_DESC *monitor, int page) {
+	while (1) {
+		printf("\r%3d%%", monitor[page].progress);
+		fflush(stdout);
+		if (monitor[page].progress == 100)
+			break;
+	}
+}
+
+void ocrProcess(tesseract::TessBaseAPI *api, ETEXT_DESC *monitor) {
+	api->Recognize(monitor);
+}
 
 int main() {
 	char *outText;
 	std::string dataPath = "../share/tessdata/";
 	std::string imagePath = "../share/test.jpg";
+	std::string outputDataPath = "test.hocr";
 	std::string language = "eng";
 
 	tesseract::OcrEngineMode oem = tesseract::OEM_DEFAULT;
@@ -41,6 +61,8 @@ int main() {
 	//tesseract::PageSegMode psm = tesseract::PSM_SINGLE_BLOCK;
 
 	tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
+	ETEXT_DESC *monitor = new ETEXT_DESC();
+
 	// Initialize tesseract-ocr with English, without specifying tessdata path
 	if (api->Init(dataPath.c_str(), language.c_str(), oem)) {
 		fprintf(stderr, "Could not initialize tesseract.\n");
@@ -53,14 +75,21 @@ int main() {
 	// Open input image with leptonica library
 	Pix *image = pixRead(imagePath.c_str());
 	api->SetImage(image);
-	api->Recognize(NULL);
 
-	tesseract::ResultIterator* ri = api->GetIterator();
+	// monitoring OCR progress
+	int page = 0;
+	std::thread t1(ocrProcess, api, monitor);
+	std::thread t2(monitorProgress, monitor, page);
+	t1.join();
+	t2.join();
+
+	// Words and boundings
+	tesseract::ResultIterator *ri = api->GetIterator();
 	tesseract::PageIteratorLevel level = tesseract::RIL_WORD;
 	printf("Words and bounding:\n");
 	if (ri) {
 		do {
-			const char* word = ri->GetUTF8Text(level);
+			const char *word = ri->GetUTF8Text(level);
 			float conf = ri->Confidence(level);
 			int x1, y1, x2, y2;
 			ri->BoundingBox(level, &x1, &y1, &x2, &y2);
@@ -70,8 +99,21 @@ int main() {
 		} while (ri->Next(level));
 	}
 	// Get OCR result
-	outText = api->GetUTF8Text();
-	printf("\nOCR output:\n%s", outText);
+	//outText = api->GetUTF8Text();
+	//printf("\nOCR output:\n%s", outText);
+
+	// output hOCR file
+	outText = api->GetHOCRText(0);
+
+	std::fstream file(outputDataPath, std::fstream::out);
+	if (file) {
+		file << outText;
+		file.close();
+		printf("\nHOCR output SUCCESS:\n%s", outputDataPath.c_str());
+	} else {
+		printf("\nHOCR output FAILURE: File Could not be created:\n%s",
+				outputDataPath.c_str());
+	}
 
 	// Destroy used object and release memory
 	api->End();

@@ -23,7 +23,7 @@ include_directories(
 )
 
 link_directories(
-  lib/
+  lib
 )
 
 set(BIN_1_SOURCES

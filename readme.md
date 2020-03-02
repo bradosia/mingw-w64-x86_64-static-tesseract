@@ -120,5 +120,5 @@ The solution above was correct. Leptonica had a make file in its src directory a
 
 ## 3/1/2020
 
-Using cmake now
+Using cmake now intead of eclipse.
 

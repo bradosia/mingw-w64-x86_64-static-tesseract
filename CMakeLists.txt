@@ -146,8 +146,5 @@ rpcrt4
 )
 
 # Post Build
-# Copy default setttings
-#add_custom_command(TARGET ${libsh_name} POST_BUILD
-#        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/plugins/")
 add_custom_command(TARGET ${BIN_1} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/share/" "${CMAKE_BINARY_DIR}/share/")

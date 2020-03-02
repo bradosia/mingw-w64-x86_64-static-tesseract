@@ -30,11 +30,11 @@ std::string exec(std::string cmdString) {
 }
 
 
-/*int main() {
+int main() {
 	cout << "Tesseract Command Line Test" << endl;
 
-	exec("tesseract ../share/test.png test -l eng");
+    exec("tesseract share/test.png test -l eng");
 
 	system("pause");
 	return 0;
-}*/
+}

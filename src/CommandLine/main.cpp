@@ -29,8 +29,8 @@ void ocrProcess(tesseract::TessBaseAPI *api, ETEXT_DESC *monitor) {
 
 int main() {
 	char *outText;
-	std::string dataPath = "../share/tessdata/";
-	std::string imagePath = "../share/test.jpg";
+    std::string dataPath = "share/tessdata/";
+    std::string imagePath = "share/test.jpg";
 	std::string outputDataPath = "test.hocr";
 	std::string language = "eng";
 

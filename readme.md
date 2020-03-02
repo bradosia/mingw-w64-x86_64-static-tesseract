@@ -27,3 +27,13 @@ Library:
 ```shell
 makepkg-mingw -sCLf
 ```
+
+# Build Examples
+
+## MSYS2 and cmake
+```shell
+cmake -G "MSYS Makefiles" -B build
+cd build
+make
+./CommandLine.exe
+```

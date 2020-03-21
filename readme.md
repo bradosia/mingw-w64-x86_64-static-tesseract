@@ -9,10 +9,7 @@ Features demonstrated:
 Credit to:
 * MSYS2 (https://msys2.duckdns.org/package/mingw-w64-x86_64-tesseract-ocr?repo=mingw64)
 
-for all the prebuilt libraries except for leptonica static libraries
-
-Compiler: 
-* gcc (x86_64-posix-seh-rev0, Built by MinGW-W64 project) 8.1.0
+for all the prebuilt libraries except for libtesseract.a and leptonica static libraries
 
 Library: 
 * Tesseract 4.1.1
@@ -38,6 +35,12 @@ make
 ```
 
 # Build Options
+
+Compiler
+```shell
+Thread model: posix
+gcc version 9.3.0 (Rev1, Built by MSYS2 project)
+```
 
 ## Tesseract 4.1.1
 

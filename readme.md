@@ -8,7 +8,6 @@ Features demonstrated:
 
 Credit to:
 * MSYS2 (https://msys2.duckdns.org/package/mingw-w64-x86_64-tesseract-ocr?repo=mingw64)
-* Alexpux (https://github.com/msys2/MINGW-packages) 
 
 for all the prebuilt libraries except for leptonica static libraries
 
@@ -16,7 +15,7 @@ Compiler:
 * gcc (x86_64-posix-seh-rev0, Built by MinGW-W64 project) 8.1.0
 
 Library: 
-* Tesseract 4.1.0-1
+* Tesseract 4.1.1
 * leptonica 1.78.0
 * harfbuzz 2.6.4
 * and many others the libraries above depend on.
@@ -37,6 +36,45 @@ cd build
 make
 ./CommandLine.exe
 ```
+
+# Build Options
+
+## Tesseract 4.1.1
+
+```shell
+-- General configuration for Tesseract 4.1.1
+-- --------------------------------------------------------
+-- Build type: Release
+-- Compiler: GNU
+-- Used standard: C++17
+-- CXX compiler options:  -fopenmp -O3 -DNDEBUG
+-- Linker options:
+-- Install directory: C:/Program Files (x86)/tesseract
+-- Architecture flags: -march=haswell;-msse2;-msse3;-mssse3;-msse4.1;-msse4.2;-mavx;-mfma;-mbmi2;-mavx2;-mno-sse4a;-mno-xop;-mno-fma4;-mno-avx512f;-mno-avx512vl;-mno-avx512pf;-mno-avx512er;-mno-avx512cd;-mno-avx512dq;-mno-avx512bw;-mno-avx512ifma;-mno-avx512vbmi
+-- Vector unit list: sse2;sse3;ssse3;sse4.1;sse4.2;avx;fma;bmi2;avx2
+-- AVX_OPT: ON
+-- AVX2_OPT: ON
+-- FMA_OPT: ON
+-- SSE41_OPT: ON
+-- MARCH_NATIVE_OPT: ON
+-- simd_flags:  -DSSE2 -DSSE3 -DSSSE3 -DSSE4_1 -DSSE4_2 -DAVX -DFMA -DBMI2 -DAVX2
+-- --------------------------------------------------------
+-- Build with cppan [CPPAN_BUILD]: OFF
+-- Build with sw [SW_BUILD]: OFF
+-- Build with openmp support [OPENMP_BUILD]: 1
+-- Disable disable graphics (ScrollView) [GRAPHICS_DISABLED]: OFF
+-- Disable the legacy OCR engine [DISABLED_LEGACY_ENGINE]: OFF
+-- Build training tools [BUILD_TRAINING_TOOLS]: ON
+-- Build tests [BUILD_TESTS]: OFF
+-- --------------------------------------------------------
+--
+-- Found the following ICU libraries:
+--   uc (required)
+--   i18n (required)
+-- Configuring done
+-- Generating done
+```
+
 
 # Development Progress
 
@@ -121,4 +159,9 @@ The solution above was correct. Leptonica had a make file in its src directory a
 ## 3/1/2020
 
 Using cmake now intead of eclipse.
+
+## 3/21/2020
+
+* Compiled libtesseract.a
+* Removed the version by Alexpux (https://github.com/msys2/MINGW-packages) 
 

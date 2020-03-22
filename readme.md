@@ -168,3 +168,19 @@ Using cmake now intead of eclipse.
 * Compiled libtesseract.a
 * Removed the version by Alexpux (https://github.com/msys2/MINGW-packages) 
 
+### Investigating slow OCR recognize
+After investigating possible reasons why the OCR processing is so slow with this library, two different OCR engines were discovered: 
+* old
+* LSTM
+
+The old engine is much faster. This library uses LSTM which is believed to be more accurate, but slower. The CPU extensions and instructions also were already present and enabling the compiler flags did not help the performance:
+* AVX extensions `-mavx2` 
+* SSE4a instruction set `-msse4a `
+
+It's possible that this library is slow because it uses LSTM engine and others have used the old engine, giving them a false impression there is an issue with this library.
+
+Sources: 
+* https://github.com/tesseract-ocr/tesseract/issues/1307
+* https://www.gitmemory.com/issue/tesseract-ocr/tesseract/2611/520371088
+
+

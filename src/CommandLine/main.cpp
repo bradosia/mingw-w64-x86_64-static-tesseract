@@ -1,6 +1,10 @@
 /*
  * Should build without any external dependencies
  */
+
+//#define DEBUG_BOUNDING_BOX 1
+#define DEBUG_RECORD_PERFORMANCE 1
+
 // c++ headers
 #include <chrono>
 #include <cmath>
@@ -31,14 +35,25 @@ void ocrProcess(tesseract::TessBaseAPI *api, ETEXT_DESC *monitor) {
 }
 
 int main() {
+  const std::string outputFileName = "performance.csv";
   std::chrono::duration<double, std::milli> processDuration;
   char *outText;
   std::string dataPath = "share/tessdata/";
   std::string imagePath = "share/test.jpg";
   std::string outputDataPath = "test.hocr";
-  std::string language = "eng";
+  std::string language = "eng+ell";
 
-  tesseract::OcrEngineMode oem = tesseract::OEM_DEFAULT;
+  /*
+   * OCR Engine modes:
+   * 0    Legacy engine only.
+   * 1    Neural nets LSTM engine only.
+   * 2    Legacy + LSTM engines.
+   * 3    Default, based on what is available.
+   */
+  tesseract::OcrEngineMode oem = tesseract::OEM_TESSERACT_ONLY;
+  // tesseract::OcrEngineMode oem = tesseract::OEM_LSTM_ONLY;
+  // tesseract::OcrEngineMode oem = tesseract::OEM_TESSERACT_LSTM_COMBINED;
+  // tesseract::OcrEngineMode oem = tesseract::OEM_DEFAULT;
   /*
    * PSM_OSD_ONLY
    Orientation and script detection only.
@@ -93,12 +108,42 @@ int main() {
   processDuration = processEnd - processStart;
   processDuration = std::chrono::duration<double, std::milli>(
       std::round(processDuration.count()));
-  std::cout << "tesseract 4 processing time: " << (int)processDuration.count()
+  std::cout << "\nTesseract 4 processing time: " << (int)processDuration.count()
             << " milliseconds\n";
+#ifdef DEBUG_RECORD_PERFORMANCE
+  std::fstream outputFile;
+  outputFile.open(outputFileName, std::fstream::app);
+  outputFile.close();
+  outputFile.open(outputFileName, std::ios::in);
+  char tempChar[1];
+  unsigned int fsize = 0;
+  unsigned int trial = 0;
+  while (outputFile.read(tempChar, 1)) {
+    // garbage
+    // std::cout << tempChar;
+    fsize++;
+    if (*tempChar == '\n')
+      trial++;
+  }
+  outputFile.close();
+  outputFile.open(outputFileName, std::fstream::app);
+  if (fsize == 0) {
+    // empty file
+    outputFile << "Trial,OCR Engine Mode,Path,Language,Runtime (ms)\n";
+    trial = 1;
+  }
+  // outputFile
+  std::cout << "WROTE: " << trial << "," << oem << "," << dataPath << ","
+            << language << "," << (int)processDuration.count() << "\n";
+  outputFile << trial << "," << oem << "," << dataPath << "," << language << ","
+             << (int)processDuration.count() << "\n";
+  outputFile.close();
+#endif
 
   // Words and boundings
   tesseract::ResultIterator *ri = api->GetIterator();
   tesseract::PageIteratorLevel level = tesseract::RIL_WORD;
+#ifdef DEBUG_BOUNDING_BOX
   printf("Words and bounding:\n");
   if (ri) {
     do {
@@ -107,10 +152,11 @@ int main() {
       int x1, y1, x2, y2;
       ri->BoundingBox(level, &x1, &y1, &x2, &y2);
       printf("word: '%s';  \tconf: %.2f; BoundingBox: %d,%d,%d,%d;\n", word,
-             conf, x1, y1, x2, y2);
+             csonf, x1, y1, x2, y2);
       delete[] word;
     } while (ri->Next(level));
   }
+#endif
   // Get OCR result
   // outText = api->GetUTF8Text();
   // printf("\nOCR output:\n%s", outText);

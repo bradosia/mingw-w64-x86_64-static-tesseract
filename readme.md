@@ -170,15 +170,23 @@ Using cmake now intead of eclipse.
 
 ### Investigating slow OCR recognize
 After investigating possible reasons why the OCR processing is so slow with this library, two different OCR engines were discovered: 
-* old
+* legacy
 * LSTM
 
-The old engine is much faster. This library uses LSTM which is believed to be more accurate, but slower. The CPU extensions and instructions also were already present and enabling the compiler flags did not help the performance:
+The legacy engine is much faster. This library uses LSTM which is believed to be more accurate, but slower. The CPU extensions and instructions also were already present and enabling the compiler flags did not help the performance:
 * AVX extensions `-mavx2` 
 * SSE4a instruction set `-msse4a `
 
-It's possible that this library is slow because it uses LSTM engine and others have used the old engine, giving them a false impression there is an issue with this library.
+It's possible that this library is slow because it uses LSTM engine and others have used the old engine, giving them a false impression there is an issue with this library. The performance profile below shows LSTM engine with AVX extensions for Matrices being used. In the future OpenCL may help make these matrix multiplications faster.
 
+Performance Profile AQTime 8
+|Routine Name|Time|Time with Children|Shared Time|Hit Count|
+|:--|:--|:--|:--|:--|
+|tesseract::LSTM::Forward|20.26|26.15|77.48|472|
+|tesseract::DotProductAVX|20.11|20.11|100.00|175187512|
+|tesseract::FullyConnected::Forward|7.02|8.25|85.15|236|   
+|const tesseract::WeightMatrix::MatrixDotVector|6.21|26.32|23.59|3834140|
+                                                                                                 
 Sources: 
 * https://github.com/tesseract-ocr/tesseract/issues/1307
 * https://www.gitmemory.com/issue/tesseract-ocr/tesseract/2611/520371088

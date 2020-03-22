@@ -179,7 +179,7 @@ The legacy engine is much faster. This library uses LSTM which is believed to be
 
 It's possible that this library is slow because it uses LSTM engine and others have used the old engine, giving them a false impression there is an issue with this library. The performance profile below shows LSTM engine with AVX extensions for Matrices being used. In the future OpenCL may help make these matrix multiplications faster.
 
-Performance Profile AQTime 8
+Performance Profile with AQTime 8
 |Routine Name|Time|Time with Children|Shared Time|Hit Count|
 |:--|:--|:--|:--|:--|
 |tesseract::LSTM::Forward|20.26|26.15|77.48|472|
